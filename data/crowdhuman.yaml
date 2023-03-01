@@ -1,0 +1,11 @@
+train: /kaggle/working/crowdhuman/images/train/
+val: /kaggle/working/crowdhuman/images/val/
+#test: test.txt
+
+#number of classes
+nc: 2
+
+# class names
+names:
+  0: person
+  1: head

@@ -25,6 +25,12 @@ Usage - formats:
                                  yolov5s_paddle_model       # PaddlePaddle
 """
 
+from utils.torch_utils import select_device, smart_inference_mode
+from utils.plots import Annotator, colors, save_one_box
+from utils.general import (LOGGER, Profile, check_file, check_img_size, check_imshow, check_requirements, colorstr, cv2,
+                           increment_path, non_max_suppression, print_args, scale_boxes, strip_optimizer, xyxy2xywh)
+from utils.dataloaders import IMG_FORMATS, VID_FORMATS, LoadImages, LoadScreenshots, LoadStreams
+from models.common import DetectMultiBackend
 import argparse
 import os
 import platform
@@ -38,13 +44,6 @@ ROOT = FILE.parents[0]  # YOLOv5 root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
-
-from models.common import DetectMultiBackend
-from utils.dataloaders import IMG_FORMATS, VID_FORMATS, LoadImages, LoadScreenshots, LoadStreams
-from utils.general import (LOGGER, Profile, check_file, check_img_size, check_imshow, check_requirements, colorstr, cv2,
-                           increment_path, non_max_suppression, print_args, scale_boxes, strip_optimizer, xyxy2xywh)
-from utils.plots import Annotator, colors, save_one_box
-from utils.torch_utils import select_device, smart_inference_mode
 
 
 @smart_inference_mode()
@@ -170,6 +169,21 @@ def run(
                         annotator.box_label(xyxy, label, color=colors(c, True))
                     if save_crop:
                         save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
+
+            # Show Count in image
+            class_name_count = 'heads'
+            class_name_count_person = 'persons'
+            l = s[1:s.find(class_name_count)].split()[-1]
+            l2 = s[1:s.find(class_name_count_person)].split()[-1]
+            if class_name_count in s:
+                # print(l, class_name_count)
+                # cv2.rectangle(im0, (0, 0), (1100, 250), -1)
+                cv2.putText(im0, f"{l} {class_name_count}", (50, 50),
+                            cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 10)
+            if class_name_count_person in s:
+                # print(l2, class_name_count_person)
+                cv2.putText(im0, f"{l2} {class_name_count_person}", (50, 100),
+                            cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 10)
 
             # Stream results
             im0 = annotator.result()
