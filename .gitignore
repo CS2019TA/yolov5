@@ -24,7 +24,6 @@
 !cfg/yolov3*.cfg
 
 storage.googleapis.com
-runs/*
 data/*
 data/images/*
 !data/*.yaml
@@ -34,7 +33,7 @@ data/images/*
 !data/images/zidane.jpg
 !data/images/bus.jpg
 !data/*.sh
-
+!data/images/test
 results*.csv
 
 # Datasets -------------------------------------------------------------------------------------------------------------
